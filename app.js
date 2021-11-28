@@ -105,6 +105,8 @@ const tasks = [
       },
     };
 
+    let currentTheme = localStorage.getItem('theme') || 'default';
+
     //Elements UI
     const listContainer = document.querySelector('.tasks-list-section .list-group');
     const form = document.forms['addTask']
@@ -113,7 +115,8 @@ const tasks = [
     const themeSelect = document.querySelector('#themeSelect')
 
 
-    //Events  
+    //Events
+    setTheme(currentTheme);
     renderAllTasks(objOfTasks);
 
     form.addEventListener('submit', onFormSubmitHandler);
@@ -225,6 +228,7 @@ const tasks = [
 
     function setTheme(name) {
       const selectedThemeObj = themes[name];
+      localStorage.setItem('theme', name)
       Object.entries(selectedThemeObj).forEach(([key, value]) => {
         document.documentElement.style.setProperty(key, value)
       })

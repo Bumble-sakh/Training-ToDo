@@ -44,9 +44,12 @@ const tasks = [
     const inputTitle = form.elements['title']
     const inputBody = form.elements['body']
 
+
     //Events  
     renderAllTasks(objOfTasks);
+
     form.addEventListener('submit', onFormSubmitHandler);
+    listContainer.addEventListener('click', onDeleteHandler)
 
     //Functions
     function renderAllTasks (tasksList) {
@@ -67,6 +70,7 @@ const tasks = [
     function listItemTemplate({_id, title, body} = {}){
         const li = document.createElement('li')
         li.classList.add('list-group-item', 'd-flex', 'align-items-center', 'flex-wrap', 'mt-2');
+        li.dataset.taskId = _id;
 
         const span = document.createElement('span')
         span.textContent = title;
@@ -117,6 +121,32 @@ const tasks = [
         objOfTasks[newTask._id] = newTask;
 
         return {...newTask};
+    }
+
+    function isConfirm(id) {
+      const {title} = objOfTasks[id];
+      const isConfirm = confirm(`Delete task: "${title}" ?`);
+      return isConfirm;
+    }
+
+    function deleteTask(id) {
+      delete objOfTasks[id];
+    }
+
+    function deleteTaskFromHtml(el) {
+      el.remove();
+    }
+
+    function onDeleteHandler ({target}) {
+      if(target.classList.contains('delete-btn')) {
+        const parent = target.closest(['[data-task-id]']);
+        const id = parent.dataset.taskId;
+        const confirm = isConfirm(id);
+        if(confirm) {
+          deleteTask(id);
+          deleteTaskFromHtml(parent);
+        }        
+      }
     }
     
 })(tasks);
